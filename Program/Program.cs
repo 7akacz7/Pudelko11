@@ -8,7 +8,7 @@ namespace Program
         {
             Pudelko p = new Pudelko(10, 3, 900, UnitOfMeasure.centimeter);
 
-            Pudelko p1 = new Pudelko(2, UnitOfMeasure.milimeter);
+            Pudelko p1 = new Pudelko(2);
 
             Console.WriteLine(p.ToString("cm") + " " + p1.ToString());
         }
