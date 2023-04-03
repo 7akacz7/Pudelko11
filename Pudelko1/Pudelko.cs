@@ -1,7 +1,8 @@
 ﻿namespace Pudelko1
 {
+    using System.Globalization;
     using P = Pudelko1.Pudelko;
-    public sealed class Pudelko
+    public sealed class Pudelko : IFormattable
     {
         
         public double A { get; set; } = 0.1;
@@ -105,7 +106,40 @@
             if (A <= 0 || B <= 0 || C <= 0) throw new ArgumentOutOfRangeException();
             if (A > 10 || B > 10 || C > 10) throw new ArgumentOutOfRangeException();
         }
+        public override string ToString()
+        {
+            return this.ToString("m", CultureInfo.CurrentCulture);
+        }
+        public string ToString(string format)
+        {
+            return this.ToString(format, CultureInfo.CurrentCulture);
+        }
+        public string ToString(string format, IFormatProvider provider)
+        {
+            if(String.IsNullOrEmpty(format))
+            {
+                format = "m";
+            }
+            if(provider== null) { provider = CultureInfo.CurrentCulture; }
+            int offset;
+            switch (format.ToLower())
+            {
+                case "mm":
+                    offset= 1000;
+                    return $"{(A * offset).ToString("F0", provider)} mm x {(B * offset).ToString("F0", provider)} mm x {(C * offset).ToString("F0", provider)} mm";
+                case "cm":
+                    offset = 100;
+                    return $"{(A * offset).ToString("F1", provider)} cm x {(B * offset).ToString("F1", provider)} cm x {(C * offset).ToString("F1", provider)} cm";
+                case "m":
+                    
+                    return $"{A.ToString("F3", provider)} m x {B.ToString("F3", provider)} m x {C.ToString("F3", provider)} m";
+                default:
+                    throw new FormatException(String.Format($"The {format} format string is not supported."));
 
+
+            }
+        }
+        /*
         public override string ToString() => $"({String.Format("{0:N3}", A)}m x {String.Format("{0:N3}", B)}m x {String.Format("{0:N3}", C)}m) V={Objetosc} P={Pole}";
         public string ToString(string format)
         {
@@ -123,6 +157,7 @@
             }
 
         }
+        */
     }
         
 }
