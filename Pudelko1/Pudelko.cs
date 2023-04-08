@@ -2,10 +2,9 @@
 {
     using System.Globalization;
     using P = Pudelko1.Pudelko;
-    public sealed class Pudelko : IFormattable
+    public sealed class Pudelko : IFormattable, IEquatable<Pudelko>
     {
-        public interface Pudelko1 : IEquatable<Pudelko>
-        { }
+       
         public bool Equals(Pudelko? other)
         {
             if (other is null) return false;
