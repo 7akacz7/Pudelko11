@@ -3,6 +3,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Text.RegularExpressions;
     using P = Pudelko1.Pudelko;
     public enum UnitOfMeasure
     {
@@ -12,6 +13,7 @@
     }
     public sealed class Pudelko : IFormattable, IEquatable<Pudelko>, IEnumerable<double>
     {
+        #region Equals ===================================
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
@@ -36,7 +38,8 @@
             if (p1 is null) return p2 is null;
             return p1.Equals(p2);
         }
-
+        #endregion
+        #region Konstruktory ===================================
         public static bool operator !=(Pudelko p1, Pudelko p2)
         {
             return !(p1 == p2);
@@ -46,6 +49,7 @@
         public double C { get; set; } = 0.1;
         public UnitOfMeasure Unit { get; set; } = UnitOfMeasure.centimeter;
         
+
         double Objetosc { get => Math.Round(A * B * C, 9); }
         double Pole { get => Math.Round(2 * A * B + 2 * B * C + 2 * A * C, 6); }
         
@@ -152,7 +156,10 @@
             if (A <= 0 || B <= 0 || C <= 0) throw new ArgumentOutOfRangeException();
             if (A > 10 || B > 10 || C > 10) throw new ArgumentOutOfRangeException();
         }
-        
+       
+       
+        #endregion
+        #region ToString ===================================
         public override string ToString()
         {
             return this.ToString("m", CultureInfo.CurrentCulture);
@@ -181,7 +188,7 @@
                     throw new FormatException();
             }
         }
-
+        #endregion
         public static Pudelko operator +(Pudelko p1, Pudelko p2)
         {
             double x = Math.Max(p1.A, p2.A);
@@ -224,6 +231,54 @@
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public static P Parse(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                throw new FormatException("Input string is empty or whitespace.");
+            }
+
+            var pattern = @"^\s*(\d+(?:\.\d+)?)(?:\s*(mm|cm|dm|m|km))?\s*[xX*]\s*(\d+(?:\.\d+)?)(?:\s*(mm|cm|dm|m|km))?\s*[xX*]\s*(\d+(?:\.\d+)?)(?:\s*(mm|cm|dm|m|km))?\s*$";
+
+            var match = Regex.Match(input, pattern);
+            if (!match.Success)
+            {
+                throw new FormatException($"Invalid input format: {input}");
+            }
+
+            var a = double.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+            var b = double.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
+            var c = double.Parse(match.Groups[5].Value, CultureInfo.InvariantCulture);
+
+            var unitA = ParseUnit(match.Groups[2].Value);
+            var unitB = ParseUnit(match.Groups[4].Value);
+            var unitC = ParseUnit(match.Groups[6].Value);
+
+            if (unitA != unitB || unitA != unitC)
+            {
+                throw new FormatException("All dimensions must use the same unit of measure.");
+            }
+
+            var unitOfMeasure = unitA;
+
+            return new P(a, b, c, unitOfMeasure);
+        }
+
+        private static UnitOfMeasure ParseUnit(string input)
+        {
+            switch (input)
+            {
+                case "mm":
+                    return UnitOfMeasure.milimeter;
+                case "cm":
+                    return UnitOfMeasure.centimeter;
+                case "m":
+                    return UnitOfMeasure.meter;
+                default:
+                    throw new FormatException($"Invalid unit of measure: {input}");
+            }
         }
     }
 
