@@ -50,8 +50,8 @@
         public UnitOfMeasure Unit { get; set; } = UnitOfMeasure.centimeter;
         
 
-        double Objetosc { get => Math.Round(A * B * C, 9); }
-        double Pole { get => Math.Round(2 * A * B + 2 * B * C + 2 * A * C, 6); }
+        public double Objetosc { get => Math.Round(A * B * C, 9); }
+        public double Pole { get => Math.Round(2 * A * B + 2 * B * C + 2 * A * C, 6); }
         
         public Pudelko()
         {
