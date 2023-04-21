@@ -1,53 +1,54 @@
 ﻿namespace Pudelko1
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Globalization;
     using P = Pudelko1.Pudelko;
-    public sealed class Pudelko : IFormattable, IEquatable<Pudelko>
+    public enum UnitOfMeasure
     {
-       
-        public bool Equals(Pudelko? other)
+        milimeter,
+        centimeter,
+        meter
+    }
+    public sealed class Pudelko : IFormattable, IEquatable<Pudelko>, IEnumerable<double>
+    {
+        public override bool Equals(object obj)
         {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return A == other.A && B == other.B && C == other.C;
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            return Equals((Pudelko)obj);
         }
-        public override bool Equals(object? obj)
+
+        public bool Equals(Pudelko other)
         {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-
-            if (obj is not Pudelko) return false;
-
-            return this.Equals(obj as Pudelko); //(Matrix2D)obj
+            if (other == null) return false;
+            var sortedDimensions1 = new[] { A, B, C }.OrderBy(x => x);
+            var sortedDimensions2 = new[] { other.A, other.B, other.C }.OrderBy(x => x);
+            return sortedDimensions1.SequenceEqual(sortedDimensions2) && Unit == other.Unit;
         }
+
         public override int GetHashCode() => HashCode.Combine(A, B, C);
-        public static bool operator ==(Pudelko? left, Pudelko? right)
+
+        public static bool operator ==(Pudelko p1, Pudelko p2)
         {
-            if (left is null && right is null) return true;
-            if (left is null) return false;
-            return left.Equals(right);
+            if (p1 is null) return p2 is null;
+            return p1.Equals(p2);
         }
-        public static bool operator !=(Pudelko? left, Pudelko? right)
+
+        public static bool operator !=(Pudelko p1, Pudelko p2)
         {
-            return !(left == right);
+            return !(p1 == p2);
         }
         public double A { get; set; } = 0.1;
         public double B { get; set; } = 0.1;
         public double C { get; set; } = 0.1;
-        UnitOfMeasure unit = UnitOfMeasure.centimeter;
+        public UnitOfMeasure Unit { get; set; } = UnitOfMeasure.centimeter;
+        
         double Objetosc { get => Math.Round(A * B * C, 9); }
         double Pole { get => Math.Round(2 * A * B + 2 * B * C + 2 * A * C, 6); }
-
-        /*public Pudelko(double a, double b, double c, UnitOfMeasure unit)
-        {
-            A = a;
-            B = b;
-            C = c;
-            unit = UnitOfMeasure.centimeter;
-        }
-        public Pudelko() : this(0.1, 0.1, 0.1, UnitOfMeasure.centimeter) { }
-        */
+        
         public Pudelko()
         {
         }
@@ -151,7 +152,7 @@
             if (A <= 0 || B <= 0 || C <= 0) throw new ArgumentOutOfRangeException();
             if (A > 10 || B > 10 || C > 10) throw new ArgumentOutOfRangeException();
         }
-
+        
         public override string ToString()
         {
             return this.ToString("m", CultureInfo.CurrentCulture);
@@ -180,7 +181,51 @@
                     throw new FormatException();
             }
         }
-    
+
+        public static Pudelko operator +(Pudelko p1, Pudelko p2)
+        {
+            double x = Math.Max(p1.A, p2.A);
+            double y = Math.Max(p1.B, p2.B);
+            double z = Math.Max(p1.C, p2.C);
+
+            return new Pudelko(x, y, z);
+        }
+
+        public static explicit operator double[](Pudelko p)
+        {
+            return new double[] { p.A / 1000.0, p.B / 1000.0, p.C / 1000.0 };
+        }
+
+        public static implicit operator Pudelko((int A, int B, int C) dimensions)
+        {
+            return new Pudelko(dimensions.A / 1000.0, dimensions.B / 1000.0, dimensions.C / 1000.0, UnitOfMeasure.meter);
+        }
+        public double this[int index]
+        {
+            get
+            {
+                if (index == 0)
+                    return A;
+                else if (index == 1)
+                    return B;
+                else if (index == 2)
+                    return C;
+                else
+                    throw new IndexOutOfRangeException();
+            }
+        }
+        public IEnumerator<double> GetEnumerator()
+        {
+            yield return A;
+            yield return B;
+            yield return C;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
-        
+
 }
+        

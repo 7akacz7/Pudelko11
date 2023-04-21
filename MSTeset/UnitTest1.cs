@@ -458,7 +458,7 @@ namespace MSTeset
         #region Operators overloading ===========================
         // ToDo
         #endregion
-        /*
+        
         #region Conversions =====================================
         [TestMethod]
         public void ExplicitConversion_ToDoubleArray_AsMeters()
@@ -493,7 +493,7 @@ namespace MSTeset
             Assert.AreEqual(p.C, p[2]);
         }
 
-        [TestMethod]
+       [TestMethod]
         public void ForEach_Test()
         {
             var p = new Pudelko(1, 2.1, 3.231);
@@ -507,7 +507,7 @@ namespace MSTeset
         }
         
         #endregion
-        */
+        
         #region Parsing =========================================
 
         #endregion
