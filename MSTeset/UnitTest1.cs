@@ -469,6 +469,16 @@ namespace MSTeset
         }
 
         [TestMethod]
+        public void Objetosc_ReturnsCorrectValue3()
+        {
+            var p = new Pudelko(1, 1, 1);
+
+            var result = p.Objetosc;
+
+            Assert.AreEqual(Math.Round(1.0, 9), result);
+        }
+
+        [TestMethod]
         public void Pole_ReturnsCorrectValue()
         {
             var p = new Pudelko(0.5, 0.5, 0.5);
@@ -486,6 +496,16 @@ namespace MSTeset
             var result = p.Pole;
 
             Assert.AreEqual(Math.Round(11.5, 6), result);
+        }
+
+        [TestMethod]
+        public void Pole_ReturnsCorrectValue3()
+        {
+            var p = new Pudelko(1, 1, 1);
+
+            var result = p.Pole;
+
+            Assert.AreEqual(Math.Round(6.0, 6), result);
         }
         #endregion
 
@@ -508,6 +528,22 @@ namespace MSTeset
             Assert.IsFalse(result2);
         }
 
+        [TestMethod]
+        public void TestPudelkoEquals2()
+        {
+            // Arrange
+            Pudelko p1 = new Pudelko(1, 2, 3);
+            Pudelko p2 = new Pudelko(2, 2, 3);
+            Pudelko p3 = new Pudelko(3, 2, 1);
+
+            // Act
+            bool result1 = p1.Equals(p2);
+            bool result2 = p1.Equals(p3);
+
+            // Assert
+            Assert.IsTrue(result2);
+            Assert.IsFalse(result1);
+        }
         #endregion
 
         #region Operators overloading ===========================
@@ -560,6 +596,17 @@ namespace MSTeset
             Assert.IsTrue(result);
         }
 
+        [TestMethod]
+        public void Operator_Equality_ReturnsTrue3()
+        {
+
+            var p1 = new Pudelko(1, 2, 3);
+            var p2 = new Pudelko(3, 2, 1);
+
+            var result = p1 == p2;
+
+            Assert.IsTrue(result);
+        }
         [TestMethod]
         public void Operator_Equality_ReturnsFalse()
         {

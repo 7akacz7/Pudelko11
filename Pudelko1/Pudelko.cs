@@ -191,27 +191,15 @@
         #endregion
         public static Pudelko operator +(Pudelko p1, Pudelko p2)
         {
-            double a = Math.Max(p1.A, p2.A);
-            double b = Math.Max(p1.B, p2.B);
-            double c = Math.Max(p1.C, p2.C);
+            double maxA = Math.Max(p1.A, p2.A);
+            double maxB = Math.Max(p1.B, p2.B);
+            double maxC = Math.Max(p1.C, p2.C);
 
-            double vol1 = p1.Objetosc;
-            double vol2 = p2.Objetosc;
-            double volSum = vol1 + vol2;
+            double obj = maxA * maxB * maxC;
 
-            double vol = a * b * c;
-
-            while (vol < volSum)
-            {
-                if (a < b && a < c)
-                    a++;
-                else if (b < c)
-                    b++;
-                else
-                    c++;
-
-                vol = a * b * c;
-            }
+            double a =obj / (maxB * maxC);
+            double b = obj / (maxA * maxC);
+            double c = obj / (maxA * maxB);
 
             return new Pudelko(a, b, c);
         }
