@@ -448,17 +448,143 @@ namespace MSTeset
 
         #region Pole, Objêtoœæ ===================================
         // ToDo
+        [TestMethod]
+        public void Objetosc_ReturnsCorrectValue()
+        {
+            var p = new Pudelko(0.5, 0.5, 0.5);
 
+            var result = p.Objetosc;
+
+            Assert.AreEqual(Math.Round(0.125, 9), result);
+        }
+
+        [TestMethod]
+        public void Objetosc_ReturnsCorrectValue2()
+        {
+            var p = new Pudelko(1, 3.5, 0.5);
+
+            var result = p.Objetosc;
+
+            Assert.AreEqual(Math.Round(1.75, 9), result);
+        }
+
+        [TestMethod]
+        public void Pole_ReturnsCorrectValue()
+        {
+            var p = new Pudelko(0.5, 0.5, 0.5);
+
+            var result = p.Pole;
+
+            Assert.AreEqual(Math.Round(1.5, 6), result);
+        }
+
+        [TestMethod]
+        public void Pole_ReturnsCorrectValue2()
+        {
+            var p = new Pudelko(0.5, 3.5, 1);
+
+            var result = p.Pole;
+
+            Assert.AreEqual(Math.Round(11.5, 6), result);
+        }
         #endregion
 
         #region Equals ===========================================
         // ToDo
+        [TestMethod]
+        public void TestPudelkoEquals()
+        {
+            // Arrange
+            Pudelko p1 = new Pudelko(2, 3, 4);
+            Pudelko p2 = new Pudelko(2, 3, 4);
+            Pudelko p3 = new Pudelko(2, 3, 5);
+
+            // Act
+            bool result1 = p1.Equals(p2);
+            bool result2 = p1.Equals(p3);
+
+            // Assert
+            Assert.IsTrue(result1);
+            Assert.IsFalse(result2);
+        }
+
         #endregion
 
         #region Operators overloading ===========================
         // ToDo
+        [TestMethod]
+        public void Operator_Addition_ReturnsCorrectValue()
+        {
+            
+            var p1 = new Pudelko(2, 3, 4);
+            var p2 = new Pudelko(1, 5, 2);
+            var expected = new Pudelko(2, 5, 4);
+
+            var result = p1 + p2;
+
+            Assert.AreEqual(expected, result);
+        }
+        [TestMethod]
+        public void Operator_Addition_ReturnsCorrectValue2()
+        {
+
+            var p1 = new Pudelko(2, 9, 2);
+            var p2 = new Pudelko(5, 5, 2);
+            var expected = new Pudelko(5, 9, 2);
+
+            var result = p1 + p2;
+
+            Assert.AreEqual(expected, result);
+        }
+        [TestMethod]
+        public void Operator_Equality_ReturnsTrue()
+        {
+           
+            var p1 = new Pudelko(1, 2, 3);
+            var p2 = new Pudelko(1, 2, 3);
+
+            var result = p1 == p2;
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void Operator_Equality_ReturnsTrue2()
+        {
+
+            var p1 = new Pudelko(3, 3, 3);
+            var p2 = new Pudelko(3, 3, 3);
+
+            var result = p1 == p2;
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void Operator_Equality_ReturnsFalse()
+        {
+
+            var p1 = new Pudelko(1, 2, 3);
+            var p2 = new Pudelko(4, 5, 6);
+
+            var result = p1 == p2;
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void Operator_Equality_ReturnsFalse2()
+        {
+
+            var p1 = new Pudelko(2, 6, 3);
+            var p2 = new Pudelko(4, 1, 8);
+
+            var result = p1 == p2;
+
+            Assert.IsFalse(result);
+        }
         #endregion
-        
+
         #region Conversions =====================================
         [TestMethod]
         public void ExplicitConversion_ToDoubleArray_AsMeters()

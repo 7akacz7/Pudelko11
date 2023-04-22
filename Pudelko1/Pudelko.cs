@@ -38,12 +38,13 @@
             if (p1 is null) return p2 is null;
             return p1.Equals(p2);
         }
-        #endregion
-        #region Konstruktory ===================================
+       
         public static bool operator !=(Pudelko p1, Pudelko p2)
         {
             return !(p1 == p2);
         }
+        #endregion
+        #region Konstruktory ===================================
         public double A { get; set; } = 0.1;
         public double B { get; set; } = 0.1;
         public double C { get; set; } = 0.1;
@@ -112,7 +113,6 @@
                 if (a < 1 || b < 1) throw new ArgumentOutOfRangeException();
                 A = a / 100;
                 B = b / 100;
-
             }
             else if (unit == UnitOfMeasure.milimeter)
             {
@@ -191,16 +191,34 @@
         #endregion
         public static Pudelko operator +(Pudelko p1, Pudelko p2)
         {
-            double x = Math.Max(p1.A, p2.A);
-            double y = Math.Max(p1.B, p2.B);
-            double z = Math.Max(p1.C, p2.C);
+            double a = Math.Max(p1.A, p2.A);
+            double b = Math.Max(p1.B, p2.B);
+            double c = Math.Max(p1.C, p2.C);
 
-            return new Pudelko(x, y, z);
+            double vol1 = p1.Objetosc;
+            double vol2 = p2.Objetosc;
+            double volSum = vol1 + vol2;
+
+            double vol = a * b * c;
+
+            while (vol < volSum)
+            {
+                if (a < b && a < c)
+                    a++;
+                else if (b < c)
+                    b++;
+                else
+                    c++;
+
+                vol = a * b * c;
+            }
+
+            return new Pudelko(a, b, c);
         }
 
         public static explicit operator double[](Pudelko p)
         {
-            return new double[] { p.A / 1000.0, p.B / 1000.0, p.C / 1000.0 };
+            return new double[] { p.A, p.B, p.C };
         }
 
         public static implicit operator Pudelko((int A, int B, int C) dimensions)
@@ -237,15 +255,15 @@
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                throw new FormatException("Input string is empty or whitespace.");
+                throw new FormatException();
             }
 
-            var pattern = @"^\s*(\d+(?:\.\d+)?)(?:\s*(mm|cm|dm|m|km))?\s*[xX*]\s*(\d+(?:\.\d+)?)(?:\s*(mm|cm|dm|m|km))?\s*[xX*]\s*(\d+(?:\.\d+)?)(?:\s*(mm|cm|dm|m|km))?\s*$";
+            var pattern = @"^\s*(\d+(?:\.\d+)?)(?:\s*(mm|cm|m))?\s*[xX*]\s*(\d+(?:\.\d+)?)(?:\s*(mm|cm|m))?\s*[xX*]\s*(\d+(?:\.\d+)?)(?:\s*(mm|cm|m))?\s*$";
 
             var match = Regex.Match(input, pattern);
             if (!match.Success)
             {
-                throw new FormatException($"Invalid input format: {input}");
+                throw new FormatException();
             }
 
             var a = double.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
@@ -258,7 +276,7 @@
 
             if (unitA != unitB || unitA != unitC)
             {
-                throw new FormatException("All dimensions must use the same unit of measure.");
+                throw new FormatException();
             }
 
             var unitOfMeasure = unitA;
@@ -277,7 +295,7 @@
                 case "m":
                     return UnitOfMeasure.meter;
                 default:
-                    throw new FormatException($"Invalid unit of measure: {input}");
+                    throw new FormatException();
             }
         }
     }
